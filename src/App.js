@@ -6,7 +6,8 @@ import DisplayWeather from './displayweather';
 
 function App() {
   const [zip, setZip] = useState("");
-  const [weather, setweather] = useState()
+  const [weather, setweather] = useState();
+  const [background, setBackground] = useState("default.jpg")
 
   const getCoordinates = () => {
     console.log(zip)
@@ -34,6 +35,19 @@ function App() {
       )
       .then(response => response.json())
       .then((res) => {
+        let weatherId = res.data.weather[0].id;
+
+        if (weatherId <= 232) {
+          setBackground("thunderstorms.jpg");
+        } else if (weatherId >= 300 && weatherId <= 531) {
+          setBackground("rain.jpg");
+        } else if (weatherId >= 600 && weatherId <= 622) {
+          setBackground("snow.jpg");
+        } else if (weatherId === 800) {
+          setBackground("sunny.jpg")
+        } else if (weatherId >= 801 && weatherId <= 804) {
+          setBackground("cloudy.jpg")
+        }
         setweather(res.data)
         console.log(res.data.weather[0].main)
       })
@@ -44,9 +58,11 @@ function App() {
     return <CheckWeather
       handleChange={setZip}
       handleSubmit={getCoordinates}
+      background={background}
     />
   } return <DisplayWeather
     weather={weather.weather[0].main}
+    background={background}
   />
 }
 
