@@ -1,16 +1,14 @@
 import './App.css';
 import React, { useState } from "react"
-import axios from 'axios';
 import CheckWeather from './checkweather';
 import DisplayWeather from './displayweather';
 
 function App() {
   const [zip, setZip] = useState("");
-  const [weather, setweather] = useState();
+  const [weather, setWeather] = useState();
   const [background, setBackground] = useState("default.jpg")
 
   const getCoordinates = () => {
-    console.log(zip)
     const zipCode = {
       zip: zip
     }
@@ -48,10 +46,16 @@ function App() {
         } else if (weatherId >= 801 && weatherId <= 804) {
           setBackground("cloudy.jpg")
         }
-        setweather(res.data)
-        console.log(res.data.weather[0].main)
+        setWeather(res.data)
       })
       .catch(error => console.error(`Error: ${error}`))
+  }
+
+  const resetWeather = () => {
+    setWeather(undefined);
+    setZip("")
+    setBackground("default.jpg");
+    console.log(weather);
   }
 
   if (!weather) {
@@ -61,8 +65,12 @@ function App() {
       background={background}
     />
   } return <DisplayWeather
-    weather={weather.weather[0].main}
+    weather={weather.weather[0].description}
+    temp={weather.main.temp}
+    feelsLike={weather.main.feels_like}
+    city={weather.name}
     background={background}
+    handleReset={resetWeather}
   />
 }
 
